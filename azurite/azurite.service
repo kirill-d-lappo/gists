@@ -1,0 +1,10 @@
+[Unit]
+Description=Azurite, Azure Blob Container Emulator
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+User=klappo
+ExecStart=/usr/bin/env bash /home/klappo/.azurite-data/start-azurite.sh

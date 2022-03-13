@@ -1,0 +1,56 @@
+<!-- I know, there is a Git target in the package of community msbuild targets -->
+<!-- but I didn't want to install any additional package                       -->
+<!-- so decided to do it on my own in the most lazy way                        -->
+
+<Target Name="AfterBuild">
+    <PropertyGroup>
+      <!-- These files contain git information -->
+      <!-- App can read these files and use somehow (display, send anywhere, etc) -->
+      <!-- There could be any variatons -->
+      <!-- I prefer to keep git info in separate files just because, there is no good reason here :) -->
+      <!-- $(OutputPath) should work for most cases, but I'm not sure about publishing case -->
+      <BranchFilePath>$(OutputPath)\branch</BranchFilePath>
+      <CommitFilePath>$(OutputPath)\commit</CommitFilePath>
+      <BuildDateFilePath>$(OutputPath)\buildDate</BuildDateFilePath>
+
+      <BuildDate>$([System.DateTime]::UtcNow.ToString(yyyy-MM-dd HH-mm))</BuildDate>
+    </PropertyGroup>
+
+    <!-- Read git branch and commit via command line and set value to properties-->
+    <!-- It ignores exit codes, so if git is not installed in the system it will not be a problem at build time -->
+    <!-- IDK may be there is a better solution for case when git is not installed in the system -->
+    <!-- or when project is not under git repo -->
+    <!-- Also, there could be a problem if your git plugin in your CI tool checks out HEAD, not branch for whatever reason -->
+    <!-- Command from this command will return HEAD and not the real branch name -->
+    <!-- the command must be updated for sure -->
+    <Exec Command="git rev-parse --abbrev-ref HEAD" ConsoleToMSBuild="true" IgnoreExitCode="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="Branch" />
+    </Exec>
+
+    <Exec Command="git rev-parse HEAD" ConsoleToMSBuild="true" IgnoreExitCode="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="CommitHash" />
+    </Exec>
+
+    <!-- The next three operations create files in output folder -->
+    <!-- Commit and branch files will not be written in case      -->
+    <!-- when there was no git information from previous step     -->
+    <WriteLinesToFile
+      Condition=" '$(Branch)' != '' "
+      File="$(BranchFilePath)"
+      Lines="$(Branch)"
+      Overwrite="true"
+    />
+
+    <WriteLinesToFile
+      Condition=" '$(CommitHash)' != '' "
+      File="$(CommitFilePath)"
+      Lines="$(CommitHash)"
+      Overwrite="true"
+    />
+
+    <WriteLinesToFile
+      File="$(BuildDateFilePath)"
+      Lines="$(BuildDate)"
+      Overwrite="true"
+    />
+  </Target>

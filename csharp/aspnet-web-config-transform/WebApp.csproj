@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- All other csproj stuff -->
+
+  <!-- ... -->
+
+  <ItemGroup>
+    <!-- Add Web.config to .gitignore list -->
+    <!-- Rename Web.Config to Web.Template.config on a disk -->
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.Template.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Template.config" >
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+
+  <!-- Web.Config Transformations - Start -->
+  <!-- Microsoft loves non-trivial solutions: https://devblogs.microsoft.com/aspnet/asp-net-web-projects-web-debug-config-web-release-config/ -->
+
+  <!-- Make sure web.config will be there even for package/publish -->
+  <Target Name="CopyWebTemplateConfig" BeforeTargets="PrepareForBuild" >
+    <Copy SourceFiles="web.template.config"
+          DestinationFiles="web.config"/>
+  </Target>
+
+  <!-- Config file transformation -->
+  <!-- Only when Web.$(Configuration).config file exists -->
+  <Target Name="ConfigTransform" AfterTargets="CopyWebTemplateConfig" Condition="exists('Web.$(Configuration).config')">
+    <TransformXml Source="Web.Template.config" Transform="Web.$(Configuration).config" Destination="Web.config" />
+  </Target>
+
+  <!-- Exclude the config template files from the created package -->
+  <Target Name="ExcludeCustomConfigTransformFiles" BeforeTargets="ExcludeFilesFromPackage">
+    <ItemGroup>
+      <ExcludeFromPackageFiles Include="Web.Template.config;Web.*.config"/>
+    </ItemGroup>
+    <Message Text="ExcludeFromPackageFiles: @(ExcludeFromPackageFiles)" Importance="high"/>
+  </Target>
+
+  <!-- Web.Config Transformations - End -->
+</Project>
