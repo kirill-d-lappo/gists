@@ -1,4 +1,4 @@
-#!/usr/bin/pwsh
+#!/usr/bin/env pwsh
 <#
 .SYNOPSIS
   Short description for your script.
@@ -46,42 +46,42 @@ $PSScriptFileName = $MyInvocation.MyCommand.Name
 
 function Main {
 
-    # Main entrypoint
-    # Create all sub-function beneath this method
-    # The file should be ended with a single Main call
+  # Main entrypoint
+  # Create all sub-function beneath this method
+  # The file should be ended with a single Main call
 
-    Write-LogoBanner
+  Write-LogoBanner
 
-    # Use here all script parameters as is, for ex:
-    if ($Force) {
-        # Do awesome things
-        Write-Banner "Forced Event"
-        Write-Warning "Forced event has been started"
-        Write-Information "Forced event is completed"
-    }
+  # Use here all script parameters as is, for ex:
+  if ($Force) {
+    # Do awesome things
+    Write-Banner "Forced Event"
+    Write-Warning "Forced event has been started"
+    Write-Information "Forced event is completed"
+  }
 
-    Write-Banner "Typical Flow"
+  Write-Banner "Typical Flow"
 }
 
 # Some kind of pretty header writing
 # I guess it is overcomplicated but who cares
 function Write-Banner {
-    param (
-      [string]
-      $Content
-    )
+  param (
+    [string]
+    $Content
+  )
 
-    $margin = "   "
-    $separatorLength = 2 * $margin.Length  `
-        + ($Content -split "`n" | Measure-Object -Property length -Maximum).Maximum
+  $margin = "   "
+  $separatorLength = 2 * $margin.Length  `
+    + ($Content -split "`n" | Measure-Object -Property length -Maximum).Maximum
 
-    $separator = "=" * $separatorLength
-    $marginContent = $Content -split "`n" | Select-Object @{ Name="Value"; Expression = {"$margin$($_)$margin"} }  `
-        | Join-String -Property "Value" -Separator "`n"
+  $separator = "=" * $separatorLength
+  $marginContent = $Content -split "`n" | Select-Object @{ Name = "Value"; Expression = { "$margin$($_)$margin" } }  `
+  | Join-String -Property "Value" -Separator "`n"
 
-    Write-Information $separator
-    Write-Information $marginContent
-    Write-Information $separator
+  Write-Information $separator
+  Write-Information $marginContent
+  Write-Information $separator
 }
 
 # Google or install any text-to-ascii art generator and have fun
