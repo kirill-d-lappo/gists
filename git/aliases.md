@@ -47,5 +47,5 @@ Delete Merged Branches
 unix only
 
 ```sh
-git branch --merged | egrep -v "(^\*|master|dev)" | xargs -r git branch -d
+git branch --merged | egrep -v "(^\*|master|dev|release.*)" | xargs -r git branch -d
 ```
