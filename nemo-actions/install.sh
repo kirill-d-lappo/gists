@@ -1,0 +1,1 @@
+cp -v *.nemo_action -t "$HOME/.local/share/nemo/actions"
