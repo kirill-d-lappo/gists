@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 #requires -version 7
 
 # Requires pwsh 7 or higher
