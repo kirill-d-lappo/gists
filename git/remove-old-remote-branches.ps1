@@ -49,21 +49,22 @@ param(
     $IgnoreBranchNames = @(),
 
     [switch]
-    $DryRun
+    $DoDelete
 )
 
 #Set Error Action to Stop At First Error
 $ErrorActionPreference = "Stop"
 
-if ($OlderThanDaysAgo -le 0){
+if ($OlderThanDaysAgo -le 0) {
     throw "OlderThanDaysAgo can't be 0 or lesser than 0"
 }
 
-if ($GitRoot -eq $NULL -or $GitRoot -eq ""){
+if ($GitRoot -eq $NULL -or $GitRoot -eq "") {
     $GitRoot = Get-Location
 }
 
-if ($DryRun){
+$DryRun = !$DoDelete
+if ($DryRun) {
     Write-Host "DryRun: no data will be modified" -ForegroundColor yellow
 }
 
@@ -117,13 +118,13 @@ function Select-BranchesToDelete {
 }
 
 function Read-UserWantsContinue {
-    if ($DryRun){
+    if ($DryRun) {
         return $True
     }
 
     $answer = Read-Host -Prompt "ARE YOU SURE? THIS OPERATION CAN'T BE UNDONE! ('yes' to confirm, 'no' to stop)"
 
-    if ($answer -eq "y"){
+    if ($answer -eq "y") {
         $answer = Read-Host -Prompt "Please, type 'yes'"
     }
 
@@ -131,33 +132,34 @@ function Read-UserWantsContinue {
 }
 
 function Remove-OldBranches {
-    $olderThanDate =  Get-OlderThanDate
+    $olderThanDate = Get-OlderThanDate
     Write-Host "Removing branches older than $olderThanDate" -ForegroundColor yellow
 
     $branches = Get-RemoteBranches
 
     $branches = Select-BranchesToDelete  `
-      -BranchNames $branches  `
-      -OlderThanDate $olderThanDate
+        -BranchNames $branches  `
+        -OlderThanDate $olderThanDate
 
     if ($branches.Length -le 0) {
         Write-Host "There are no branches to delete by specified criterias, no branch will be deleted." -ForegroundColor yellow
         return
-    } else {
+    }
+    else {
         Write-Host "Branches to delete: $($branches.Length)" -ForegroundColor yellow
     }
 
-    if (-Not $(Read-UserWantsContinue)){
+    if (-Not $(Read-UserWantsContinue)) {
         return
     }
 
     $branches | ForEach-Object {
         $fullBranchName = $_.Trim();
 
-        $remote, $branchName = $fullBranchName -split '/',2
+        $remote, $branchName = $fullBranchName -split '/', 2
         Write-Host "Deleting on $($remote): $branchName" -ForegroundColor Red
 
-        if ($DryRun){
+        if ($DryRun) {
             return
         }
 
