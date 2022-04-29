@@ -63,6 +63,8 @@ if ($GitRoot -eq $NULL -or $GitRoot -eq "") {
     $GitRoot = Get-Location
 }
 
+$GitSysDir = "$GitRoot/.git"
+
 $DryRun = !$DoDelete
 if ($DryRun) {
     Write-Host "DryRun: no data will be modified" -ForegroundColor yellow
@@ -81,7 +83,7 @@ function Get-OlderThanDate {
 }
 
 function Get-RemoteBranches {
-    $(& git branch -r --merged) | ForEach-Object { $_.Trim() }
+    $(& git --git-dir "$GitSysDir" branch -r --merged) | ForEach-Object { $_.Trim() }
 }
 
 function Get-BrnachLatestCommitDate {
@@ -92,7 +94,7 @@ function Get-BrnachLatestCommitDate {
         $BranchName
     )
 
-    $(git show --format="%ci" "$BranchName") | Select-Object -First 1
+    $(git --git-dir "$GitSysDir" show --format="%ci" "$BranchName") | Select-Object -First 1
 }
 
 function Select-BranchesToDelete {
@@ -163,7 +165,7 @@ function Remove-OldBranches {
             return
         }
 
-        git push -d $remote $branchName
+        git  --git-dir "$GitSysDir" push -d $remote $branchName
     }
 }
 
