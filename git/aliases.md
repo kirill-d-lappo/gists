@@ -7,7 +7,7 @@ Inspired by Edward Thomson : https://edwardthomson.com/blog/advent_day_9_git_lol
 Added format padding, reordered values
 
 ```sh
-git config --global alias.lol "log --pretty=format:'%Cred%h%Creset -%Creset %<(60,trunc)%s%Cgreen%<(13,trunc)(%cr) %C(bold blue)%<(15,trunc)<%an>%Creset %C(yellow)%d%Creset' --abbrev-commit --graph"
+git config --global alias.lol "log --pretty=format:'%x09%x09 %Cred%h%Creset -%Creset %<(60,trunc)%s%Cgreen%<(13,trunc)(%cr) %C(bold blue)%<(15,trunc)<%an>%Creset %C(yellow)%d%Creset' --abbrev-commit --graph"
 ```
 
 ## git amend
