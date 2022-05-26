@@ -11,7 +11,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $InformationPreference = 'Continue'
 
-$FilePathName = [System.IO.Path]::GetFileNameWithoutExtension($FilePathName)
+$FilePathName = [System.IO.Path]::GetFileNameWithoutExtension($FilePath)
 
 # use filename as database name if it is not specified as a second parameter
 if (-Not $DatabaseName) {
