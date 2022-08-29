@@ -18,3 +18,10 @@ sudo apt-get install -y git tree build-essential neovim
 
 
 curl -sS https://starship.rs/install.sh | bash
+
+# neovim - packer plugin
+git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+
+# neovim - install everything
+# neovim - loading only plugins config part
+nvim -u ~/.config/nvim/lua/plugins.lua --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
