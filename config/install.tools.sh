@@ -17,9 +17,13 @@ sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install -y git tree build-essential neovim 
 
 
+echo "Installing starhip..."
 curl -sS https://starship.rs/install.sh | bash
 
+
 # neovim - packer plugin
+
+echo "Installing neovim packer and plugins..."
 git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
 # neovim - install everything
