@@ -46,6 +46,13 @@ return require('packer').startup(function()
 		end,
 	}
 
+	-- External Tools Manager
+	use "williamboman/mason.nvim"
+	
+	-- Code -- lsp
+	use 'neovim/nvim-lsp-installer'
+	--	use 'neovim/nvim-lspconfig'
+
 	-- Code - file support
 	use 'zigford/vim-powershell'
 	use 'cespare/vim-toml'
@@ -57,10 +64,6 @@ return require('packer').startup(function()
 			require('Comment').setup{}
 		end,
 	}
-
-	-- Code -- lsp
-	use 'williamboman/nvim-lsp-installer'
-	use 'williamboman/nvim-lspconfig'
 
 	-- Codw -- Highlight, edit, and navigate code using a fast incremental parsing library
 	use 'nvim-treesitter/nvim-treesitter'

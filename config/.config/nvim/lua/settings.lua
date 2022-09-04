@@ -38,6 +38,8 @@ autocmd TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", ti
 augroup end
 ]], false)
 
+require("mason").setup()
+
 -- Code - cmp
 require'cmp'.setup {
 	sources = {
@@ -50,9 +52,9 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
 -- The following example advertise capabilities to `clangd`.
-require'lspconfig'.clangd.setup {
-	capabilities = capabilities,
-}
+--require'lspconfig'.clangd.setup {
+--	capabilities = capabilities,
+--}
 
 -- Конфиг ale + eslint
 g.ale_fixers = {
