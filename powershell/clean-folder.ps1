@@ -26,62 +26,62 @@
 #>
 
 param (
-    [Parameter(Mandatory=$true)]
-    [string]
-    $Path = "C:\Temp",
+  [Parameter(Mandatory = $true)]
+  [string]
+  $Path = "C:\Temp",
 
-    [Parameter(Mandatory=$true)]
-    [int]
-    $OlderThanDays = 7,
+  [Parameter(Mandatory = $true)]
+  [int]
+  $OlderThanDays = 7,
 
-    [Switch]
-    $Recurse = $false,
+  [Switch]
+  $Recurse = $false,
 
-    [Switch]
-    $DryRun = $false
+  [Switch]
+  $DoDelete = $false
 )
 
 function Remove-OldFiles {
-    param (
-        [Parameter(Mandatory=$true)]
-        [String]
-        $Path,
+  param (
+    [Parameter(Mandatory = $true)]
+    [String]
+    $Path,
 
-        [Parameter(Mandatory=$true)]
-        [int]
-        $OlderThanDays,
+    [Parameter(Mandatory = $true)]
+    [int]
+    $OlderThanDays,
 
-        [Switch]
-        $Recurse,
+    [Switch]
+    $Recurse,
 
-        [Switch]
-        $DryRun
-    )
+    [Switch]
+    $DryRun
+  )
 
-    if ($DryRun) {
-        Write-Warning "Dry run mode, no files will be deleted"
+  if ($DryRun) {
+    Write-Warning "Dry run mode, no files will be deleted"
+  }
+
+  $OlderThanDate = $(Get-Date).AddDays(-$OlderThanDays)
+
+  Write-Host "Removing files older than $OlderThanDate ($OlderThanDays+ days ago)"
+
+  $itemsToDelete = Get-ChildItem $Path -Attributes !Directory+!System -Recurse:$Recurse  `
+  | Where-Object { $_.LastWriteTime -lt $OlderThanDate }
+
+  if ($itemsToDelete.Count -le 0) {
+    Write-Host "No files were found."
+    return
+  }
+
+  $itemsToDelete | ForEach-Object {
+    Write-Host "Remove: $($_.Name)"
+    if (-Not $DoDelete) {
+      return
     }
 
-    $OlderThanDate = $(Get-Date).AddDays(-$OlderThanDays)
-
-    Write-Host "Removing files older than $OlderThanDate ($OlderThanDays+ days ago)"
-
-    $itemsToDelete = Get-ChildItem $Path -Attributes !Directory+!System -Recurse:$Recurse  `
-    | Where-Object { $_.LastWriteTime -lt $OlderThanDate }
-
-    if ($itemsToDelete.Count -le 0) {
-        Write-Host "No files were found."
-        return
-    }
-
-    $itemsToDelete | ForEach-Object {
-        Write-Host "Remove: $($_.Name)"
-        if ($DryRun) {
-            return
-        }
-
-        Remove-Item $_.FullName
-      }
+    Remove-Item $_.FullName
+  }
 }
 
 Remove-OldFiles -Path $Path -OlderThanDays $OlderThanDays -Recurse:$Recurse -DryRun:$DryRun

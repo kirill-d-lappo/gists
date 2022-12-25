@@ -28,7 +28,7 @@ Improtant: "git revert" is a different command and works with commits
 * Reverce all files from a previous commit: `git reverce`
 
 ```sh
-git config --global alias.reverce = "!f() { git checkout HEAD~1 -- ${@:-'*'} ; }; f"
+git config --global alias.reverce = "!f() { git checkout HEAD~1 -- \${@:-'*'} ; }; f"
 ```
 
 ## git whatsnew

@@ -14,7 +14,8 @@
 
 .EXAMPLE
   ./PowershellTemplate.ps1
-  Run with default settings. Also you can type multiple lines.
+  Run with default settings.
+  Also you can type multiple lines.
 
 .EXAMPLE
   ./PowershellTemplate.ps1 -Force
