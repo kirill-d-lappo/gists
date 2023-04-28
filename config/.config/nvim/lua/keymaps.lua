@@ -13,6 +13,9 @@ map('', '<right>', ':echoe "Use l"<CR>', {noremap = true, silent = false})
 -- Автоформат + сохранение по CTRL-s , как в нормальном, так и в insert режиме
 map('n', '<C-s>', ':Autoformat<CR>:w<CR>',  default_opts)
 map('i', '<C-s>', '<esc>:Autoformat<CR>:w<CR>', default_opts)
+-- Выход
+map('i', '<C-q>', ':q<CR>', default_opts)
+map('n', '<C-q>', '<esc>:q<CR>', default_opts)
 -- Переключение вкладок с помощью TAB или shift-tab (akinsho/bufferline.nvim)
 map('n', '<Tab>', ':BufferLineCycleNext<CR>', default_opts)
 map('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', default_opts)
