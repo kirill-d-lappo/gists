@@ -1,105 +1,69 @@
-vim.cmd [[packadd packer.nvim]]
+return require('packer').startup(function(use)
+  use 'wbthomason/packer.nvim'
 
-return require('packer').startup(function()
-	use 'wbthomason/packer.nvim'
+  -- colorscheme
+  use 'joshdick/onedark.vim'
 
-	use 'joshdick/onedark.vim'		-- colorscheme
+  -- External Tools Manager
+  use {
+    "williamboman/mason.nvim",
+    -- :MasonUpdate updates registry contents
+    run = ":MasonUpdate"
+  }
 
-	-- status bar like tmux
-	use {
-		'nvim-lualine/lualine.nvim',
-		requires = {'kyazdani42/nvim-web-devicons', opt = true},
-		config = function()
-			require('lualine').setup()
-		end,
-	}
+  -- configuration for default lsp clinet of nvim
+  use 'neovim/nvim-lspconfig'
 
-	use 'tpope/vim-fugitive'			-- git plugin
+  -- connects mason with lspconfig
+  use "williamboman/mason-lspconfig.nvim"
 
-	use {
-		'kyazdani42/nvim-tree.lua',
-    requires = 'kyazdani42/nvim-web-devicons',
-    config = function() require'nvim-tree'.setup {} end, 
-	}
-	use 'Xuyuanp/nerdtree-git-plugin'
-	use 'ryanoasis/vim-devicons'
-	use 'tiagofumo/vim-nerdtree-syntax-highlight'
+  --  completion engine plugin for neovim written in Lua.
+  use 'hrsh7th/cmp-nvim-lsp'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-path'
+  use 'hrsh7th/nvim-cmp'
 
-	-- buffer
-	use {
-		'akinsho/bufferline.nvim',
-		requires = 'kyazdani42/nvim-web-devicons',
-		config = function()
-			require("bufferline").setup{}
-		end,
-	}
+  --  fzf
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = { { 'nvim-lua/plenary.nvim' } },
+  }
 
-	-- Навигация внутри файла по классам и функциям
-	use 'majutsushi/tagbar'
+  -- Code - file support
+  use 'zigford/vim-powershell'
+  use 'cespare/vim-toml'
+  use 'editorconfig/editorconfig-vim'
+  use 'gabrielelana/vim-markdown'
+  use 'numToStr/Comment.nvim'
 
-	-- Замена fzf и ack
-	use {
-		'nvim-telescope/telescope.nvim',
-		requires = { {'nvim-lua/plenary.nvim'} },
-		config = function()
-			require'telescope'.setup {}
-		end,
-	}
+  -- buffer
+  use {
+    'akinsho/bufferline.nvim',
+    requires = 'kyazdani42/nvim-web-devicons'
+  }
 
-	-- External Tools Manager
-	use "williamboman/mason.nvim"
-	
-	-- Code -- lsp
-	use 'neovim/nvim-lsp-installer'
-	--	use 'neovim/nvim-lspconfig'
+  -- status bar like tmux
+  use {
+    'nvim-lualine/lualine.nvim',
+    requires = { 'kyazdani42/nvim-web-devicons', opt = true },
+  }
 
-	-- Code - file support
-	use 'zigford/vim-powershell'
-	use 'cespare/vim-toml'
-	use 'editorconfig/editorconfig-vim'
-	use 'gabrielelana/vim-markdown'
-	use {
-		'numToStr/Comment.nvim',
-		config = function()
-			require('Comment').setup{}
-		end,
-	}
+  -- git plugin
+  use 'tpope/vim-fugitive'
 
-	-- Codw -- Highlight, edit, and navigate code using a fast incremental parsing library
-	use 'nvim-treesitter/nvim-treesitter'
+  -- автоформатирование
+  -- python3 -m pip install pynvim
+  use 'vim-autoformat/vim-autoformat'
 
-	-- Code -- autocompletion
-	use 'hrsh7th/nvim-cmp'
-	use 'hrsh7th/cmp-nvim-lsp'
-	use 'hrsh7th/cmp-buffer'
-	use 'saadparwaiz1/cmp_luasnip'
+  -- Подсвечивает #ffffff
+  use 'ap/vim-css-color'
 
-	--- Автодополнлялка к файловой системе
-	use 'hrsh7th/cmp-path'
+  -- Подсвечивает закрывающий и откры. тэг. Если, где-то что-то не закрыто, то не подсвечивает.
+  use 'idanarye/breeze.vim'
 
-	-----------------------------------------------------------
-	-- HTML и CSS
-	-----------------------------------------------------------
-	-- Подсвечивает закрывающий и откры. тэг. Если, где-то что-то не закрыто, то не подсвечивает.
-	use 'idanarye/breeze.vim'
-	-- Закрывает автоматом html и xml тэги. Пишешь <h1> и он автоматом закроется </h1>
-	use 'alvan/vim-closetag'
-	-- Подсвечивает #ffffff
-	use 'ap/vim-css-color'
+  -- Закрывает автоматом html и xml тэги. Пишешь <h1> и он автоматом закроется </h1>
+  use 'alvan/vim-closetag'
 
-	use 'Chiel92/vim-autoformat'
-
-	-- ]p - вставить на строку выше, [p - ниже
-	use 'tpope/vim-unimpaired'
-
-	--- popup окошки
-	use 'nvim-lua/popup.nvim'
-
-	-- Закрывает автоматом скобки
-	use 'cohama/lexima.vim'
-	-- Линтер, работает для всех языков
-	use 'dense-analysis/ale'
-
-	-- Todo [2022/03/12 KL] Add here check if plugins are installed and then install
-
+  -- editorconfig настройки
+  use 'gpanders/editorconfig.nvim'
 end)
