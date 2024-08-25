@@ -29,13 +29,13 @@ param (
   [Parameter()]
   [Alias("no-completion")]
   [switch]
-  $NoAutocompletionRegen = $false,
+  $NoAutocompletionRegen = $False,
 
   # Do not generate bat files
   [Parameter()]
   [Alias("no-bat")]
   [switch]
-  $NoBatRegen = $false
+  $NoBatRegen = $False
 )
 
 #region 3d party scripts
@@ -145,6 +145,8 @@ if (-Not (Test-Path $TargetFolderPath)) {
 $profileRoot = Split-Path "$PROFILE" -Parent
 $AutocompletionCoreUtilsFilePath = "$profileRoot\PowerShell.AutoCompletion.CoreUtils.ps1"
 $AliasRemovalFilePath = "$profileRoot\PowerShell.CoreUtils.AliasRemoval.ps1"
+
+$ManifestPath = "$CargoUtilsSourcePath\Cargo.toml"
 
 $coreutils = @(
   "["
@@ -300,7 +302,7 @@ using namespace System.Management.Automation.Language
   $autocompletions = @();
   $coreutils | ForEach-Object {
     $tool = $_
-    $script = $(cargo run --release --manifest-path "D:\workspace\remote\coreutils\Cargo.toml" completion $tool powershell)
+    $script = $(cargo run --release --manifest-path "$ManifestPath" completion $tool powershell)
     $script = $script -replace "^using namespace.*$", ""
 
     $autocompletions += $script
@@ -323,7 +325,7 @@ function Generate-AliasRemovalScript {
 }
 
 function Build-InstallRustUtils {
-  cargo install --path "$CargoUtilsSourcePath" --locked
+  cargo build --release --target-dir "$TargetFolderPath" --manifest-path "$ManifestPath" --locked
 }
 
 function Remove-CoreUtilsBlock {
@@ -372,12 +374,11 @@ function Add-CoreUtilsToProfile {
 
   $profileAddition = @"
 #region RustCoreUtils
+# Generated at: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 
 # Rust Core Utils init scripts:
 # * removing default aliases from Powershell like ls, rm, etc.
 # * adding autocompletions
-
-# Generated at: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 
 `$profileRoot = "`$PSScriptRoot"
 $(if (Test-Path "$profileRoot\PowerShell.CoreUtils.AliasRemoval.ps1") { '. "$profileRoot\PowerShell.CoreUtils.AliasRemoval.ps1"'})
@@ -405,8 +406,6 @@ function Generate-RustCoreUtils() {
   Write-Information "Project: https://github.com/uutils/coreutils"
 
   Start-CountdownTimer -Text "Installing" -Seconds 5
-
-  return
 
   if (! $NoBuild) {
     Write-Information "Building and installing Rust Core Utils..."
