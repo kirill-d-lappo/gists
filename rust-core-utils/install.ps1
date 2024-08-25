@@ -101,7 +101,7 @@ function Start-CountdownTimer {
 
   $spinnerPos = 0
   $spinnerLen = $spinner.Length
-  $remain = $t
+
   $targetTime = (get-date) + $waitTime
   $remain = ($targetTime - (get-date))
   if ($Text) {
@@ -110,19 +110,22 @@ function Start-CountdownTimer {
 
   $origpos = $host.UI.RawUI.CursorPosition
 
-  while ($remain.TotalSeconds -gt 0) {
-    $formattedRemain = Format-Time $remain
+  try {
+    while ($remain.TotalSeconds -gt 0) {
+      $formattedRemain = Format-Time $remain
 
-    Write-Host (" {0} " -f $spinner[$spinnerPos % $spinnerLen]) -NoNewline
-    write-host (" {0}{1}" -f $formattedText, $formattedRemain) -NoNewline
-    Write-Host "`r" -NoNewline
+      Write-Host (" {0} " -f $spinner[$spinnerPos % $spinnerLen]) -NoNewline
+      write-host (" {0}{1}" -f $formattedText, $formattedRemain) -NoNewline
+      Write-Host "`r" -NoNewline
 
-    $spinnerPos += 1
-    Start-Sleep -Milliseconds $TickLength
-    $remain = ($targetTime - (get-date))
+      $spinnerPos += 1
+      Start-Sleep -Milliseconds $TickLength
+      $remain = ($targetTime - (get-date))
+    }
   }
-
-  $host.UI.RawUI.CursorPosition = $origpos
+  finally {
+    $host.UI.RawUI.CursorPosition = $origpos
+  }
 
   $terminalWidth = $Host.UI.RawUI.WindowSize.Width
   Write-Host "$(' ' * $terminalWidth)`r" -NoNewline
@@ -239,10 +242,13 @@ $coreutils = @(
 
 # when you want to override some default utils with alternatives or specify default arguments
 $utilOverrides = @{
-  "ls" = @{
+  "ls"  = @{
     "command" = "eza"
     "args"    = "--color=auto --icons=auto"
-  };
+  }
+  "cat" = @{
+    "command" = "bat"
+  }
 };
 
 function Set-EscapeCharacters {
@@ -274,8 +280,14 @@ function Generate-RustCoreUtilsBats() {
 
     $utilOverride = $utilOverrides[$_]
 
-    $utilCommand = $utilOverride?.command ?? "`"coreutils.exe`" $utilName"
-    $utilArgs = $utilOverride?.args
+    if ($utilOverride) {
+      $utilCommand = $utilOverride.command
+      $utilArgs = $utilOverride.args
+    }
+
+    if (-Not($utilCommand)) {
+      $utilCommand = "`"coreutils.exe`" $utilName"
+    }
 
     $script = @"
 @echo off
@@ -325,7 +337,9 @@ function Generate-AliasRemovalScript {
 }
 
 function Build-InstallRustUtils {
-  cargo build --release --target-dir "$TargetFolderPath" --manifest-path "$ManifestPath" --locked
+  cargo build --release --manifest-path "$ManifestPath" --locked
+
+  Copy-Item -Path "$CargoUtilsSourcePath\target\release\coreutils.exe" -Destination "$TargetFolderPath\coreutils.exe"
 }
 
 function Remove-CoreUtilsBlock {
