@@ -1,6 +1,7 @@
--- sudo add-apt-repository ppa:neovim-ppa/stable -y
--- sudo add-apt-repository ppa:neovim-ppa/unstable -y
+-- order is important. leader key must be defined before packages
+require("klappo.core")
 
-require('plugins')
-require('settings')
-require('keymaps')
+require("klappo.packages")
+
+require("klappo.snippets")
+
