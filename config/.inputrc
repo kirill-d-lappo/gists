@@ -1,5 +1,0 @@
-// ~/.inputrc
-// create the file and restart the terminal
-
-// Alt+j: Copies the previous argument that has been just typed
-"\ej":"!#:1\e^"

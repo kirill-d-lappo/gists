@@ -2,16 +2,10 @@
 
 wd=$(dirname "$(realpath $0)")
 
-cp -v "$wd/.tmux.conf" -t ~/
-cp -v "$wd/.vimrc"     -t ~/
-cp -v "$wd/.inputrc"   -t ~/
+cp -v "$wd/_tmux.conf" "$HOME/.tmux.conf"
+cp -v "$wd/_vimrc"     "$HOME/.vimrc"
 
-cp -r -v "$wd/.config" -t ~/
-
-
-# append .bashrc instead of rewriting the whole file
-echo "Appending user setups to .bashrc"
-cat "$wd/.bashrc-append" >> ~/.bashrc
+cp -r -v "$wd/_config" -t "$HOME/"
 
 echo "Sourcing ~/.bashrc"
 source ~/.bashrc
