@@ -80,6 +80,12 @@ return {
             capabilities = caps,
 				})
 			end,
+			["powershell_es"] = function()
+				lspconfig["powershell_es"].setup({
+					capabilities = caps,
+          bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services/PowerShellEditorServices",
+				})
+			end,
 			["omnisharp"] = function()
 				lspconfig["omnisharp"].setup({
 					capabilities = caps,
