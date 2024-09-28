@@ -35,7 +35,13 @@ param (
   [Parameter()]
   [Alias("no-bat")]
   [switch]
-  $NoBatRegen = $False
+  $NoBatRegen = $False,
+
+  # Do not wait, start immediatly
+  [Parameter()]
+  [Alias("no-wait")]
+  [switch]
+  $NoWait = $False
 )
 
 #region 3d party scripts
@@ -98,6 +104,7 @@ function Start-CountdownTimer {
   # $spinner = @( '⣷', '⣯', '⣟', '⡿', '⢿', '⣻', '⣽', '⣾' )
   # $spinner = @( '⠉', '⠈', '⠘' , '⠐', '⠰', '⠠' , '⠤', '⠄', '⠆', '⠂', '⠃', '⠁')
   $spinner = @( '⠉', '⠙', '⠘' , '⠸', '⠰', '⠴' , '⠤', '⠦', '⠆', '⠇', '⠃', '⠋')
+  $completedChar = "✓";
 
   $spinnerPos = 0
   $spinnerLen = $spinner.Length
@@ -130,7 +137,7 @@ function Start-CountdownTimer {
   $terminalWidth = $Host.UI.RawUI.WindowSize.Width
   Write-Host "$(' ' * $terminalWidth)`r" -NoNewline
 
-  Write-Host " * " -NoNewline
+  Write-Host " $completedChar " -NoNewline
   Write-Host " $Text now!"
 }
 
@@ -146,8 +153,11 @@ if (-Not (Test-Path $TargetFolderPath)) {
 }
 
 $profileRoot = Split-Path "$PROFILE" -Parent
-$AutocompletionCoreUtilsFilePath = "$profileRoot\PowerShell.AutoCompletion.CoreUtils.ps1"
+$AutocompletionCoreUtilsFilePath = "$profileRoot\PowerShell.CoreUtils.AutoCompletion.ps1"
 $AliasRemovalFilePath = "$profileRoot\PowerShell.CoreUtils.AliasRemoval.ps1"
+
+$EntryPointFileName = "PowerShell.CoreUtils.EntryPoint.ps1"
+$EntryPointFilePath = "$profileRoot\$EntryPointFileName"
 
 $ManifestPath = "$CargoUtilsSourcePath\Cargo.toml"
 
@@ -280,6 +290,9 @@ function Generate-RustCoreUtilsBats() {
 
     $utilOverride = $utilOverrides[$_]
 
+    $utilCommand = ""
+    $utilArgs = ""
+
     if ($utilOverride) {
       $utilCommand = $utilOverride.command
       $utilArgs = $utilOverride.args
@@ -342,51 +355,12 @@ function Build-InstallRustUtils {
   Copy-Item -Path "$CargoUtilsSourcePath\target\release\coreutils.exe" -Destination "$TargetFolderPath\coreutils.exe"
 }
 
-function Remove-CoreUtilsBlock {
-  param (
-    $lines
-  )
-
-  $filteredLines = @() + $lines
-
-  $startIndex = -1
-  $endIndex = -1
-
-  for ($i = 0; $i -lt $filteredLines.Count; $i++) {
-    $line = $filteredLines[$i]
-
-    if ($line -match "^#region RustCoreUtils$") {
-      $startIndex = $i
-    }
-
-    if ($line -match "^#endregion RustCoreUtils$") {
-      $endIndex = $i
-    }
+function Update-CoreUtilsEntrypoint {
+  if (-Not (Test-Path "$EntryPointFilePath")) {
+    New-Item "$EntryPointFilePath" -ItemType File -Force
   }
 
-  if ( $startIndex -ge 0 -and $endIndex -gt $startIndex) {
-    $filteredLines = $filteredLines[0..($startIndex - 1)] + $filteredLines[($endIndex + 1)..$filteredLines.Count]
-  }
-
-  $filteredLines
-}
-
-function Remove-CoreUtilsFromProfile {
-  $profileLines = (Get-Content "$PROFILE")
-
-  $profileLines = @() + (Remove-CoreUtilsBlock $profileLines)
-
-  $profileLines > $PROFILE
-}
-
-function Add-CoreUtilsToProfile {
-  if (-Not (Test-Path "$PROFILE")) {
-    New-Item "$PROFILE" -ItemType File -Force
-  }
-
-  $profileLines = (Get-Content "$PROFILE")
-
-  $profileAddition = @"
+  $entryPointLines = @"
 #region RustCoreUtils
 # Generated at: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 
@@ -401,9 +375,7 @@ $(if (Test-Path "$profileRoot\PowerShell.AutoCompletion.CoreUtils.ps1") { '. "$p
 #endregion RustCoreUtils
 "@
 
-  $profileLines += $profileAddition
-
-  $profileLines > $PROFILE
+  $entryPointLines > $EntryPointFilePath
 }
 
 function Test-PathVariable {
@@ -419,7 +391,9 @@ function Generate-RustCoreUtils() {
   Write-Information "Building and installing Rust Core Utils by uutils teams"
   Write-Information "Project: https://github.com/uutils/coreutils"
 
-  Start-CountdownTimer -Text "Installing" -Seconds 5
+  if (! $NoWait) {
+    Start-CountdownTimer -Text "Installing" -Seconds 5
+  }
 
   if (! $NoBuild) {
     Write-Information "Building and installing Rust Core Utils..."
@@ -431,8 +405,6 @@ function Generate-RustCoreUtils() {
     Generate-RustCoreUtilsBats
   }
 
-  Remove-CoreUtilsFromProfile
-
   if (! $NoAutocompletionRegen) {
     Write-Information "Generating powershell autocompletion file for each command..."
     Generate-RustCoreUtilsAutocompletion
@@ -441,11 +413,16 @@ function Generate-RustCoreUtils() {
   Write-Information "Generating Alias removal script..."
   Generate-AliasRemovalScript
 
-  Add-CoreUtilsToProfile
+  Update-CoreUtilsEntrypoint
 
   Test-PathVariable
 
   Write-Information "Done."
+
+  Write-Information "Please, add the next line to your `$PROFILE: '$PROFILE'"
+  Write-Information ""
+  Write-Information ". `$PSScriptRoot\$EntryPointFileName"
+  Write-Information ""
 }
 
 Generate-RustCoreUtils
