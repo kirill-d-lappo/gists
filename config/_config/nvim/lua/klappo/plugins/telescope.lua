@@ -49,7 +49,7 @@ return {
 		map("n", "<leader>ft", "<cmd>TodoTelescope<CR>", { desc = "Find todos" })
 
 		-- map("n", "<leader>fa", ts_builtin.commands, { desc = "Find NVIM action / command" })
-		map("n", "<leader>fa", ts_builtin.keymaps, { desc = "Find NVIM keymapped action" })
+		map("n", "<leader>fa", ts_builtin.keymaps, { desc = "Find NVIM action / command" })
 
 		map("n", "<leader>fcl", ts_builtin.colorscheme, { desc = "Change color scheme" })
 		map("n", "<leader>fres", ts_builtin.resume, { desc = "Resume last search" })

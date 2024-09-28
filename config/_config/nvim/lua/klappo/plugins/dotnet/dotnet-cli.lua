@@ -1,5 +1,6 @@
-return {
-  'MoaidHathot/dotnet.nvim',
-  cmd = "DotnetUI",
-  opts = {},
-}
+return {}
+-- return {
+--   'MoaidHathot/dotnet.nvim',
+--   cmd = "DotnetUI",
+--   opts = {},
+-- }

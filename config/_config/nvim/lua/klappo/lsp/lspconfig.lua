@@ -98,8 +98,8 @@ return {
 					filetypes = { "cs", "vb", "csproj", "sln", "slnx", "props", "csx", "targets" },
 				})
 			end,
-			["graphql-language-service-cli"] = function()
-				lspconfig["graphql-language-service-cli"].setup({
+			["graphql-language-server-cli"] = function()
+				lspconfig["graphql-language-server-cli"].setup({
 					capabilities = caps,
 					filetypes = { "graphql" },
 				})
