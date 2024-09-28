@@ -17,7 +17,8 @@ param (
   [Alias("s")]
   [Alias("source")]
   [string]
-  $CargoUtilsSourcePath = "C:\Users\klappo\workspace\remote\coreutils",
+  # $CargoUtilsSourcePath = "C:\Users\klappo\workspace\remote\coreutils",
+  $CargoUtilsSourcePath,
 
   # Skip build step
   [Parameter()]
@@ -386,6 +387,33 @@ function Test-PathVariable {
   }
 }
 
+function Clone-Utils {
+
+  $srcUrl = "https://github.com/uutils/coreutils.git"
+  $localPath = "$PSScriptRoot/_src/coreutils"
+
+  if (!$localPath -or -Not(Test-Path($localPath)) -or -Not(Test-Path("$localPath/*"))) {
+    New-Item -Path $localPath -ItemType Directory -Force -ErrorAction SilentlyContinue
+
+    & git clone "$srcUrl" "$localPath"
+  }
+
+
+  return $localPath
+}
+
+function Ensure-Sources {
+  if (!$CargoUtilsSourcePath) {
+    $CargoUtilsSourcePath = Clone-Utils
+    return
+  }
+
+  if (-Not(Test-Path($CargoUtilsSourcePath))) {
+    Write-Error "Source folder '$CargoUtilsSourcePath' does not exist!"
+    exit 1
+  }
+}
+
 function Generate-RustCoreUtils() {
 
   Write-Information "Building and installing Rust Core Utils by uutils teams"
@@ -394,6 +422,10 @@ function Generate-RustCoreUtils() {
   if (! $NoWait) {
     Start-CountdownTimer -Text "Installing" -Seconds 5
   }
+
+  Ensure-Sources
+
+  return
 
   if (! $NoBuild) {
     Write-Information "Building and installing Rust Core Utils..."
@@ -424,6 +456,8 @@ function Generate-RustCoreUtils() {
   Write-Information ". `$PSScriptRoot\$EntryPointFileName"
   Write-Information ""
 }
+
+
 
 Generate-RustCoreUtils
 
