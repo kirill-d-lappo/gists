@@ -36,4 +36,5 @@ map("n", "<leader>tp", "<CMD>tabp<CR>", { desc = "To prev tab" })
 map("n", "<leader>tf", "<CMD>tabnew %<CR>", { desc = "Current buffer in a new tab" })
 
 -- commenting
-map("n", "<C-_>", "<CMD>gcc<CR>", { desc = "Comment current line (gcc)" })
+-- local comment = require("Comment.api")
+-- map("n", "<C-_>", comment.toggle.linewise, { desc = "Comment current line (gcc)" })

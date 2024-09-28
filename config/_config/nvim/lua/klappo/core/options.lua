@@ -1,5 +1,4 @@
 local cmd = vim.cmd -- execute Vim commands
-local exec = vim.api.nvim_exec -- execute Vimscript
 local g = vim.g -- global variables
 local opt = vim.opt -- global/buffer/windows-scoped options
 
@@ -43,12 +42,25 @@ opt.smartcase = true -- when mixed case in search query, use case-sensetive sear
 cmd([[au BufEnter * set fo-=c fo-=r fo-=o]])
 
 -- Подсвечивает на доли секунды скопированную часть текста
-exec(
-	[[
-augroup YankHighlight
-autocmd!
-autocmd TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=400}
-augroup end
-]],
-	false
-)
+vim.api.nvim_create_autocmd("TextYankPost", {
+	group = vim.api.nvim_create_augroup("YankHighlight", {}),
+	callback = function()
+		vim.highlight.on_yank({
+			higroup = "IncSearch",
+			timeout = 400,
+		})
+	end,
+})
+
+-- Old implementation of Yank Highlight via exec function
+-- vim.api.nvim_exec is deprecated
+-- local exec = vim.api.nvim_exec -- execute Vimscript
+-- exec(
+-- 	[[
+-- augroup YankHighlight
+-- autocmd!
+-- autocmd TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=400}
+-- augroup end
+-- ]],
+-- 	false
+-- )
