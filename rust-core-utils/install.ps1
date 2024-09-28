@@ -425,8 +425,6 @@ function Generate-RustCoreUtils() {
 
   Ensure-Sources
 
-  return
-
   if (! $NoBuild) {
     Write-Information "Building and installing Rust Core Utils..."
     Build-InstallRustUtils
