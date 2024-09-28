@@ -5,7 +5,8 @@ return {
 		"nvim-tree/nvim-web-devicons",
 		{
 			"nvim-telescope/telescope-fzf-native.nvim",
-			build = "make",
+			-- build = "make",
+			build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release'
 		},
 		"folde/todo-comments.nvim",
 	},
