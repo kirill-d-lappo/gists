@@ -17,8 +17,8 @@ param (
   [Alias("s")]
   [Alias("source")]
   [string]
-  # $CargoUtilsSourcePath = "C:\Users\klappo\workspace\remote\coreutils",
-  $CargoUtilsSourcePath,
+  # $SourcesPath = "C:\Users\klappo\workspace\remote\coreutils",
+  $SourcesPath,
 
   # Skip build step
   [Parameter()]
@@ -42,7 +42,12 @@ param (
   [Parameter()]
   [Alias("no-wait")]
   [switch]
-  $NoWait = $False
+  $NoWait = $False,
+
+  [Parameter()]
+  [Alias("clean-src")]
+  [switch]
+  $CleanSources = $False
 )
 
 #region 3d party scripts
@@ -160,7 +165,10 @@ $AliasRemovalFilePath = "$profileRoot\PowerShell.CoreUtils.AliasRemoval.ps1"
 $EntryPointFileName = "PowerShell.CoreUtils.EntryPoint.ps1"
 $EntryPointFilePath = "$profileRoot\$EntryPointFileName"
 
-$ManifestPath = "$CargoUtilsSourcePath\Cargo.toml"
+$CargoUtilsSourcePath = $SourcesPath
+function Get-ManifestPath {
+  "$CargoUtilsSourcePath\Cargo.toml"
+}
 
 $coreutils = @(
   "["
@@ -328,7 +336,7 @@ using namespace System.Management.Automation.Language
   $autocompletions = @();
   $coreutils | ForEach-Object {
     $tool = $_
-    $script = $(cargo run --release --manifest-path "$ManifestPath" completion $tool powershell)
+    $script = $(cargo run --release --manifest-path "$(Get-ManifestPath)" completion $tool powershell)
     $script = $script -replace "^using namespace.*$", ""
 
     $autocompletions += $script
@@ -351,7 +359,7 @@ function Generate-AliasRemovalScript {
 }
 
 function Build-InstallRustUtils {
-  cargo build --release --manifest-path "$ManifestPath" --locked
+  cargo build --release --manifest-path "$(Get-ManifestPath)" --locked
 
   Copy-Item -Path "$CargoUtilsSourcePath\target\release\coreutils.exe" -Destination "$TargetFolderPath\coreutils.exe"
 }
@@ -399,19 +407,25 @@ function Clone-Utils {
   }
 
 
-  return $localPath
+  $localPath
 }
 
 function Ensure-Sources {
-  if (!$CargoUtilsSourcePath) {
-    $CargoUtilsSourcePath = Clone-Utils
-    return
+  if (!$script:CargoUtilsSourcePath) {
+    $script:CargoUtilsSourcePath = $(Clone-Utils)
   }
+
+  Write-Information "Sources location: '$CargoUtilsSourcePath'"
 
   if (-Not(Test-Path($CargoUtilsSourcePath))) {
     Write-Error "Source folder '$CargoUtilsSourcePath' does not exist!"
     exit 1
   }
+}
+
+function Clean-All {
+
+  Remove-Item $CargoUtilsSourcePath -Force -Recurse
 }
 
 function Generate-RustCoreUtils() {
@@ -446,6 +460,10 @@ function Generate-RustCoreUtils() {
   Update-CoreUtilsEntrypoint
 
   Test-PathVariable
+
+  if ($CleanSources) {
+    Clean-All
+  }
 
   Write-Information "Done."
 
