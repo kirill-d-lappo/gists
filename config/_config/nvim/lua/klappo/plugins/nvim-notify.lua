@@ -5,6 +5,8 @@ return {
 		notify.setup({
 			render = "wrapped-compact",
 			stages = "fade",
+			max_height = 5,
+			timeout = 1500,
 		})
 	end,
 }

@@ -9,6 +9,7 @@ g.mapleader = " " -- Space as <leader>
 
 -- Типа 'Нажимает' на ESC при быстром нажатии jj, чтобы не тянутся
 map("i", "jj", "<Esc>", { noremap = true, desc = "Back to NORMAL mode" })
+map("i", "kk", "<Esc>", { noremap = true, desc = "Back to NORMAL mode" })
 
 -- Стрелочки откл. Использовать hjkl
 map("", "<up>", ':echoe "Use k"<CR>', { noremap = true, silent = false })
@@ -34,6 +35,8 @@ map("n", "<leader>tx", "<CMD>tabclose<CR>", { desc = "Close tab" })
 map("n", "<leader>tn", "<CMD>tabn<CR>", { desc = "To next tab" })
 map("n", "<leader>tp", "<CMD>tabp<CR>", { desc = "To prev tab" })
 map("n", "<leader>tf", "<CMD>tabnew %<CR>", { desc = "Current buffer in a new tab" })
+
+map("n", "<C-s>", "<CMD>wa!<CR>", { desc = "Save everything" })
 
 -- commenting
 -- local comment = require("Comment.api")

@@ -31,7 +31,7 @@ lazy.setup({
 	checker = { enabled = false, notify = false },
 
 	-- do not notify about changes in settings
-	change_detection = { notify = false },
+	change_detection = { notify = true },
 })
 
-vim.cmd("colorscheme tokyonight-moon")
+vim.cmd("colorscheme kanagawa-wave")

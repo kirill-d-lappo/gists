@@ -4,7 +4,7 @@ local opt = vim.opt -- global/buffer/windows-scoped options
 
 --region Main
 
-opt.colorcolumn = "80,120,140" -- линейка
+opt.colorcolumn = "120,140" -- линейка
 opt.cursorline = true -- current line
 opt.spelllang = { "en_us", "ru" } -- Словари рус eng
 opt.number = true -- Включаем нумерацию строк

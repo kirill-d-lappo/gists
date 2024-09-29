@@ -4,8 +4,14 @@ return {
 	dependencies = {
 		"onsails/lspkind.nvim",
 		"hrsh7th/cmp-nvim-lsp",
-		{ "antosha417/nvim-lsp-file-operations", config = true },
-		{ "folke/neodev.nvim", opts = {} },
+		{
+			"antosha417/nvim-lsp-file-operations",
+			config = true,
+		},
+		{
+			"folke/neodev.nvim",
+			opts = {},
+		},
 	},
 	config = function()
 		local lspconfig = require("lspconfig")
@@ -17,10 +23,17 @@ return {
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 			callback = function(ev)
-				local opts = { buffer = ev.buf, silent = true, desc = "Default LSP Command" }
+				local opts = {
+					buffer = ev.buf,
+					silent = true,
+					desc = "Default LSP Command",
+				}
 
 				opts.desc = "Show LSP references"
 				map("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
+
+				opts.desc = "Search LSP everywhere"
+				map("n", "gE", "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>", opts)
 
 				opts.desc = "Go to declaration"
 				map("n", "gD", vim.lsp.buf.declaration, opts)
@@ -69,7 +82,11 @@ return {
 
 		for type, icon in pairs(signs) do
 			local hc = "DiagnosticSign" .. type
-			vim.fn.sign_define(hc, { text = icon, texthl = hc, numhl = "" })
+			vim.fn.sign_define(hc, {
+				text = icon,
+				texthl = hc,
+				numhl = "",
+			})
 		end
 
 		local caps = cmp_nvim_lsp.default_capabilities()
@@ -96,12 +113,6 @@ return {
 					organize_imports_on_format = true,
 					enable_decompilation_support = true,
 					filetypes = { "cs", "vb", "csproj", "sln", "slnx", "props", "csx", "targets" },
-				})
-			end,
-			["graphql-language-server-cli"] = function()
-				lspconfig["graphql-language-server-cli"].setup({
-					capabilities = caps,
-					filetypes = { "graphql" },
 				})
 			end,
 			["lua_ls"] = function()

@@ -8,14 +8,16 @@ return {
 			build = "make",
 		},
 		"folde/todo-comments.nvim",
+		"rcarriga/nvim-notify", -- for some reason telescope can't load notify without that dep time to time
 	},
 	config = function()
 		local telescope = require("telescope")
 		local actions = require("telescope.actions")
 		local telescope_previewer = require("telescope.previewers")
+		local theme = require("telescope.themes").get_dropdown()
 
 		telescope.setup({
-			defaults = {
+			defaults = vim.tbl_extend("force", theme, {
 				path_display = { "smart" },
 				mappings = {
 					i = {
@@ -34,7 +36,10 @@ return {
 					".*/obj/.*",
 					"node_modules",
 				},
-			},
+				layout_config = {
+					vertical = { width = 0.8 },
+				},
+			}),
 		})
 
 		telescope.load_extension("fzf")
@@ -53,5 +58,7 @@ return {
 
 		map("n", "<leader>fcl", ts_builtin.colorscheme, { desc = "Change color scheme" })
 		map("n", "<leader>fres", ts_builtin.resume, { desc = "Resume last search" })
+
+		-- map("n", "<leader>flr", ts_builtin.lsp_dynamic_workspace_symbols, { desc = "Find references in LSP" })
 	end,
 }
