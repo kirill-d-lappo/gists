@@ -58,7 +58,5 @@ return {
 
 		map("n", "<leader>fcl", ts_builtin.colorscheme, { desc = "Change color scheme" })
 		map("n", "<leader>fres", ts_builtin.resume, { desc = "Resume last search" })
-
-		-- map("n", "<leader>flr", ts_builtin.lsp_dynamic_workspace_symbols, { desc = "Find references in LSP" })
 	end,
 }

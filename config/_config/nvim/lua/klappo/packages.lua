@@ -19,10 +19,10 @@ vim.opt.rtp:prepend(lazypath)
 local lazy = require("lazy")
 lazy.setup({
 	spec = {
-		{ import = "klappo.plugins" },
 		{ import = "klappo.themes" },
-		{ import = "klappo.plugins.dotnet" },
+		{ import = "klappo.plugins" },
 		{ import = "klappo.lsp" },
+		{ import = "klappo.lsp.dotnet" },
 	},
 	install = {
 		colorscheme = { "rose-pine" },
