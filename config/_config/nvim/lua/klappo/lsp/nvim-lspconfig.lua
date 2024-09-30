@@ -14,6 +14,7 @@ return {
 		},
 	},
 	config = function()
+		local utils = require("klappo.utils")
 		local lspconfig = require("lspconfig")
 		local mason_lspconfig = require("mason-lspconfig")
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
@@ -105,6 +106,8 @@ return {
 		end
 
 		local caps = cmp_nvim_lsp.default_capabilities()
+		local pwsh_edit_svc_path = utils.get_mason_package_folder_path("powershell-editor-services")
+			.. "/PowerShellEditorServices"
 
 		mason_lspconfig.setup_handlers({
 			function(server_name)
@@ -115,14 +118,13 @@ return {
 			["powershell_es"] = function()
 				lspconfig["powershell_es"].setup({
 					capabilities = caps,
-					bundle_path = vim.fn.stdpath("data")
-						.. "/mason/packages/powershell-editor-services/PowerShellEditorServices",
+					bundle_path = pwsh_edit_svc_path,
 				})
 			end,
 			["omnisharp"] = function()
 				lspconfig["omnisharp"].setup({
 					capabilities = caps,
-					cmd = { "dotnet", vim.fn.stdpath("data") .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
+					cmd = { "dotnet", utils.get_mason_package_folder_path("omnisharp") .. "/libexec/OmniSharp.dll" },
 					enable_roslyn_analysers = true,
 					enable_import_completion = true,
 					organize_imports_on_format = true,
