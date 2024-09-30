@@ -7,7 +7,7 @@ return {
 			"nvim-telescope/telescope-fzf-native.nvim",
 			build = "make",
 		},
-		"folde/todo-comments.nvim",
+		"folke/todo-comments.nvim",
 		"rcarriga/nvim-notify", -- for some reason telescope can't load notify without that dep time to time
 	},
 	config = function()
