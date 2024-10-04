@@ -1,5 +1,6 @@
 return {
 	"GustavEikaas/easy-dotnet.nvim",
+	branch = "feat/launch-profile",
 	dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
 	config = function()
 		local function get_secret_path(secret_guid)
@@ -72,7 +73,7 @@ return {
 
 		-- Example keybinding
 		local map = vim.keymap.set
-		map("n", "<leader>br", dotnet.run_project, { desc = "Run dotnet project" })
+		map("n", "<leader>br", dotnet.run_with_profile, { desc = "Run dotnet project" })
 		map("n", "<leader>bs", dotnet.build_solution, { desc = "Build solution" })
 		map("n", "<leader>bp", dotnet.build_default, { desc = "Build default roject" })
 		map("n", "<leader>bn", dotnet.restore, { desc = "Restore nuget packages" })
