@@ -23,6 +23,7 @@ lazy.setup({
 	spec = {
 		{ import = "klappo.themes" },
 		{ import = "klappo.plugins" },
+		{ import = "klappo.plugins.klappo" },
 		{ import = "klappo.lsp" },
 		{ import = "klappo.lsp.dotnet" },
 	},
@@ -37,3 +38,8 @@ lazy.setup({
 })
 
 vim.cmd("colorscheme kanagawa-wave")
+
+require("nvim-keymaps").setup()
+
+-- some notes
+-- some notes

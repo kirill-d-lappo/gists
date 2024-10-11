@@ -40,7 +40,7 @@ return {
 				}
 
 				opts.desc = "Debug: Toggle breakpoint"
-				map("n", "gdb", dap.toggle_breakpoint, opts)
+				map("n", "<leader>bp", dap.toggle_breakpoint, opts)
 
 				opts.desc = "Debug: Start/continue exectuion"
 				map("n", "<F5>", dap.continue, opts)

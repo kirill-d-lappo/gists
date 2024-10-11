@@ -1,6 +1,5 @@
 return {
 	"GustavEikaas/easy-dotnet.nvim",
-	branch = "feat/launch-profile",
 	dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
 	config = function()
 		local function get_secret_path(secret_guid)
@@ -55,9 +54,9 @@ return {
 				local command = commandBuilders[action](commandParams)
 
 				vim.cmd("split")
-				vim.cmd("echo '" .. command .. "'")
-				--vim.cmd("appendbufline " .. "'" .. command .. "'")
 				vim.cmd("term " .. command .. "\n")
+
+				vim.notify(command)
 			end,
 			secrets = {
 				path = get_secret_path,
@@ -71,9 +70,16 @@ return {
 			dotnet.secrets()
 		end, {})
 
-		-- Example keybinding
+		local function run_with_profile_latest(dotnet_package)
+			return function()
+				dotnet_package.run_with_profile(true)
+			end
+		end
+
 		local map = vim.keymap.set
+
 		map("n", "<leader>br", dotnet.run_with_profile, { desc = "Run dotnet project" })
+		map("n", "<leader>bl", run_with_profile_latest(dotnet), { desc = "Run latest dotnet project" })
 		map("n", "<leader>bs", dotnet.build_solution, { desc = "Build solution" })
 		map("n", "<leader>bp", dotnet.build_default, { desc = "Build default roject" })
 		map("n", "<leader>bn", dotnet.restore, { desc = "Restore nuget packages" })

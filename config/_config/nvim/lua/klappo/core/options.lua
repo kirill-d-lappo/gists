@@ -4,6 +4,7 @@ local opt = vim.opt -- global/buffer/windows-scoped options
 
 --region Main
 
+opt.textwidth = 120
 opt.colorcolumn = "120,140" -- линейка
 opt.cursorline = true -- current line
 opt.spelllang = { "en_us", "ru" } -- Словари рус eng
@@ -51,16 +52,3 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		})
 	end,
 })
-
--- Old implementation of Yank Highlight via exec function
--- vim.api.nvim_exec is deprecated
--- local exec = vim.api.nvim_exec -- execute Vimscript
--- exec(
--- 	[[
--- augroup YankHighlight
--- autocmd!
--- autocmd TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=400}
--- augroup end
--- ]],
--- 	false
--- )
