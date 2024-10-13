@@ -19,35 +19,35 @@ local types = require("luasnip.util.types")
 local conds = require("luasnip.extras.conditions")
 local conds_expand = require("luasnip.extras.conditions.expand")
 
+local utils = require("utils")
 
-local function getusername()
-    return os.getenv('USER') or os.getenv('USERNAME')
-end
+local get_today_date = utils.get_today_date
+local get_user_name = utils.get_user_name
 
 ls.add_snippets("cs", {
 
     s("note", {
-        t(string.format("// Note [%s %s] ", os.date("%Y-%m-%d"), getusername())),
+        t(string.format("// Note [%s %s] ", get_today_date(), get_user_name())),
         i(0),
-        }
+    }
     ),
 
     s("bug", {
-        t(string.format("// Bug [%s %s] ", os.date("%Y-%m-%d"), getusername())),
+        t(string.format("// Bug [%s %s] ", get_today_date(), get_user_name())),
         i(0),
-        }
+    }
     ),
 
     s("fixme", {
-        t(string.format("// FixMe [%s %s] ", os.date("%Y-%m-%d"), getusername())),
+        t(string.format("// FixMe [%s %s] ", get_today_date(), get_user_name())),
         i(0),
-        }
+    }
     ),
 
     s("todo", {
-        t(string.format("// Todo [%s %s] ", os.date("%Y-%m-%d"), getusername())),
+        t(string.format("// Todo [%s %s] ", get_today_date(), get_user_name())),
         i(0),
-        }
+    }
     ),
 
 })

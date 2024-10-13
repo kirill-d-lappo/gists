@@ -24,6 +24,8 @@ lazy.setup({
 		{ import = "klappo.themes" },
 		{ import = "klappo.plugins" },
 		{ import = "klappo.plugins.klappo" },
+		{ import = "klappo.plugins.git" },
+		{ import = "klappo.plugins.folke" },
 		{ import = "klappo.lsp" },
 		{ import = "klappo.lsp.dotnet" },
 	},
