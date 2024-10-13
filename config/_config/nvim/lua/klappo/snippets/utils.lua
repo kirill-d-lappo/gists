@@ -5,7 +5,7 @@ function M.get_user_name()
 end
 
 function M.get_today_date()
-    return os.date("%Y-%m-%d1")
+    return os.date("%Y-%m-%d")
 end
 
 return M
