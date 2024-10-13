@@ -22,7 +22,6 @@ return {
 					local dotnet = require("easy-dotnet")
 					local debug_info = dotnet.get_debug_dll()
 					return debug_info.dll_path
-					-- return vim.fn.input("Path to dll", dotnet.get_debug_dll(), "file")
 				end,
 			},
 		}
