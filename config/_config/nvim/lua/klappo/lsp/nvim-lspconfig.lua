@@ -107,7 +107,6 @@ return {
 
 		local caps = cmp_nvim_lsp.default_capabilities()
 		local pwsh_edit_svc_path = utils.get_mason_package_folder_path("powershell-editor-services")
-			.. "/PowerShellEditorServices"
 
 		mason_lspconfig.setup_handlers({
 			function(server_name)

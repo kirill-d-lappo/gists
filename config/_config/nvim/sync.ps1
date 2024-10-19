@@ -2,17 +2,20 @@
 
 # Install from repo to config folder
 
+
 param (
-[switch]
-$Install
+	[switch]
+	$Install
 )
+
 $configFolderPath = "$env:USERPROFILE/AppData/Local/nvim"
 $repoFolderPath = "$env:USERPROFILE/w/remote/gists/config/_config/nvim"
 
-if ($Install) {
-Copy-Item -Recurse -Force -Path "$repoFolderPath/*" -Destination "$configFolderPath"
-}
-else {
- Copy-Item -Recurse -Force -Path "$configFolderPath/*" -Destination "$repoFolderPath"
+if ($Install)
+{
+	Copy-Item -Recurse -Force -Path "$repoFolderPath/*" -Destination "$configFolderPath"
+} else
+{
+	Copy-Item -Recurse -Force -Path "$configFolderPath/*" -Destination "$repoFolderPath"
 }
 
