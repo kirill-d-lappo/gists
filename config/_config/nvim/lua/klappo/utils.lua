@@ -29,7 +29,7 @@ end
 ---Returns path to the Lazy data folder
 ---@return string
 function utils.get_lazy_folder_path()
-	return utils.get_data_folder_path() .. "lazy"
+	return utils.get_data_folder_path() .. "/lazy"
 end
 
 return utils
