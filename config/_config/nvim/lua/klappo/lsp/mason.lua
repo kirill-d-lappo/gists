@@ -29,7 +29,6 @@ return {
 				"pyright",
 				"omnisharp",
 				"yamlls",
-				"yamllint",
 				"vimls",
 				"lua_ls",
 				"jsonls",
@@ -40,6 +39,7 @@ return {
 
 		mason_tool_installer.setup({
 			ensure_installed = {
+				"yamllint",
 				-- "prettier", -- prettier formatter
 				"stylua", -- lua formatter
 				"isort", -- python formatter
