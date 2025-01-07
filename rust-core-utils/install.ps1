@@ -394,8 +394,8 @@ function Update-CoreUtilsEntrypoint
 # * adding autocompletions
 
 `$profileRoot = "`$PSScriptRoot"
-$(if (Test-Path "$profileRoot\PowerShell.CoreUtils.AliasRemoval.ps1") { '. "$profileRoot\PowerShell.CoreUtils.AliasRemoval.ps1"'})
-$(if (Test-Path "$profileRoot\PowerShell.AutoCompletion.CoreUtils.ps1") { '. "$profileRoot\PowerShell.AutoCompletion.CoreUtils.ps1"'})
+if (Test-Path "`$profileRoot\PowerShell.CoreUtils.AliasRemoval.ps1") { . "`$profileRoot\PowerShell.CoreUtils.AliasRemoval.ps1"}
+if (Test-Path "`$profileRoot\PowerShell.CoreUtils.AutoCompletion.ps1") { . "`$profileRoot\PowerShell.CoreUtils.AutoCompletion.ps1"}
 
 #endregion RustCoreUtils
 "@
